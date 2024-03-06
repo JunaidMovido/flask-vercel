@@ -1,4 +1,5 @@
 import logging
+from api.config import Config
 
 logger = logging.getLogger('logger')
 logger.setLevel(logging.DEBUG)
@@ -17,5 +18,8 @@ file_handler.setFormatter(formatter)
 console_handler.setFormatter(formatter)
 
 # Add the handlers to the logger
-logger.addHandler(file_handler)
 logger.addHandler(console_handler)
+
+# The vercel env is readonly - so to prevent this
+if Config.FLASK_ENVIRONMENT == "development":
+    logger.addHandler(file_handler)
