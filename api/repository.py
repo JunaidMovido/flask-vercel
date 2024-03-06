@@ -1,7 +1,7 @@
 import requests
 from pprint import pprint
-from config import Config
-from logger import logger
+from api.config import Config
+from api.logger import logger
 
 def SendAnalysisRequestToUberall(company_name, country_code, street_address, zip_code, request_identifier):
 

@@ -2,8 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/main.py",  
+      "src": "api/main.py",
       "use": "@vercel/python"
     }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "api/main.py" }
   ]
 }

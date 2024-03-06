@@ -2,14 +2,13 @@ from flask import Flask, request, jsonify
 from marshmallow import Schema, fields, ValidationError, validate
 from functools import wraps
 from datetime import datetime, timedelta
-from repository import SendAnalysisRequestToUberall
+from api.repository import SendAnalysisRequestToUberall
 from types import SimpleNamespace
 from uuid import uuid4
-from logger import logger
-from sendresult import send_email_with_link
-from config import Config
+from api.logger import logger
+from api.sendresult import send_email_with_link
+from api.config import Config
 from urllib.parse import urljoin, urlencode
-from pprint import pprint
 
 app = Flask(__name__)
 
@@ -96,7 +95,7 @@ def CreateWPARequest():
             zip_code = validated_data_object.zip,
             request_identifier=req_identifier)
         
-        pprint(response_from_external_api)
+        logger.debug(f'Received response from api - {response_from_external_api}')
     
         if response_from_external_api is None:
             return jsonify({'error': 'There was a problem processing your request'}), 500

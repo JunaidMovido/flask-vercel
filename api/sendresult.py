@@ -1,10 +1,12 @@
-import sendgrid
 from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileName, FileType, Disposition
+from sendgrid import SendGridAPIClient
 from flask import jsonify
-from config import Config
-from logger import logger
+from api.config import Config
+from api.logger import logger
 import ssl
 import css_inline
+from os.path import dirname, abspath, join
+dir = dirname(abspath(__file__))
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -13,9 +15,8 @@ def send_email_with_link(recipient_email, analyse_link, language, request_identi
 
     logger.info(f'Request ID {request_identifier} - Command received to generate SendGrid payload')
 
-    sg = sendgrid.SendGridAPIClient(api_key=Config.SENDGRID_API_KEY)
-
-    with open('./aadvanto-email-4.html', mode='r') as fp:
+    sg = SendGridAPIClient(api_key=Config.SENDGRID_API_KEY)
+    with open(join(dir, '..', 'assets', 'aadvanto-email-4.html'), 'r') as fp:    
         email_template = (fp.read())      
 
     # Substitute values into the template
