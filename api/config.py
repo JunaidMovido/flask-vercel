@@ -17,5 +17,6 @@ class Config:
         'https://localhost:300'
     ]
     WEBSITE_WPA_BASE_URL = os.getenv("WEBSITE_WPA_BASE_URL")
+    WORKING_DIR = os.path.dirname(os.path.abspath(__file__))
 
     # Add other configuration variables as needed

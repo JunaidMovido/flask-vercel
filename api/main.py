@@ -9,6 +9,7 @@ from api.logger import logger
 from api.sendresult import send_email_with_link
 from api.config import Config
 from urllib.parse import urljoin, urlencode
+import os
 
 app = Flask(__name__)
 
@@ -133,6 +134,25 @@ def CreateWPARequest():
         return jsonify({'error': f'{err}'}), 400
 
     return jsonify({'success': True}), 200
+
+@app.route('/get-template', methods=['GET'])
+def returnTemplateHtml():
+    template_name = request.args.get('name')
+    if not template_name:
+        return jsonify({'error': 'Template name is missing in the request'}), 400
+
+    template_path = os.path.join(Config.WORKING_DIR, '..', 'assets', template_name)
+    print(template_path)
+    if not os.path.isfile(template_path):
+        return jsonify({'error': 'The requested template was not found'}), 404
+
+    try:
+        with open(template_path, 'r') as fp:
+            email_template = fp.read()
+        return email_template
+
+    except Exception as e:
+        return jsonify({'error': 'An unexpected error occurred'}), 500
 
 @app.route('/', methods=['GET','POST'])
 def main():

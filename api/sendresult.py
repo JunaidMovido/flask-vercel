@@ -5,8 +5,7 @@ from api.config import Config
 from api.logger import logger
 import ssl
 import css_inline
-from os.path import dirname, abspath, join
-dir = dirname(abspath(__file__))
+from os.path import join
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -16,8 +15,9 @@ def send_email_with_link(recipient_email, analyse_link, language, request_identi
     logger.info(f'Request ID {request_identifier} - Command received to generate SendGrid payload')
 
     sg = SendGridAPIClient(api_key=Config.SENDGRID_API_KEY)
-    with open(join(dir, '..', 'assets', 'aadvanto-email-4.html'), 'r') as fp:    
-        email_template = (fp.read())      
+    
+    with open(join(Config.WORKING_DIR, '..', 'assets', 'aadvanto.html'), 'r') as fp:    
+        email_template = (fp.read())    
 
     # Substitute values into the template
     content = email_template.replace('{wpa_url}',analyse_link)
