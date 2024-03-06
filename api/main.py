@@ -136,9 +136,5 @@ def CreateWPARequest():
     return jsonify({'success': True}), 200
 
 @app.route('/', methods=['GET','POST'])
-def index():
+def main():
     return jsonify({'success':True}), 200
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
