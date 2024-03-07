@@ -18,5 +18,6 @@ class Config:
     ]
     WEBSITE_WPA_BASE_URL = os.getenv("WEBSITE_WPA_BASE_URL")
     WORKING_DIR = os.path.dirname(os.path.abspath(__file__))
+    AUTH_API_SECRET = os.getenv("AUTH_API_SECRET")
 
     # Add other configuration variables as needed
