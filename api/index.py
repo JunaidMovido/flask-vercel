@@ -69,6 +69,7 @@ def returnTemplateHtml():
 @authenticate_request()
 @json_body_assertion()
 def HandlePerspectiveWebhook():
+    print('special code for dev')
     pass
 
 @app.route('/', methods=['GET','POST'])
