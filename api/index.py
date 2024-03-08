@@ -69,7 +69,40 @@ def returnTemplateHtml():
 @authenticate_request()
 @json_body_assertion()
 def HandlePerspectiveWebhook():
-    print('special code for dev')
+    req_identifier = str(uuid4())
+    logger.info(f'Request ID {req_identifier} - Received')
+    mock_path = os.path.join(Config.WORKING_DIR, '..',
+                             'assets', 'testing.json')
+    
+    try:    
+        with open(mock_path) as fp:
+            webhook_body = json.load(fp)
+
+        webhook_values = webhook_body['values']
+        webhook_values["address#country"] == CountryCleanup(webhook_values["address#country"])
+
+        validated_data = WPACheckRequest().load(
+            {
+                'company' : webhook_values["firstName"],
+                'country': webhook_values["address#country"],
+                'street': webhook_values["address#street"],
+                'zip': webhook_values["address#postalCode"],
+                'email': webhook_values["email"]
+            }
+        )
+        validated_data_object = SimpleNamespace(**validated_data)
+        logger.info(f'Request ID {req_identifier} - Payload Validated')
+
+    except ValidationError as err:
+        logger.error(
+            f'Request ID {req_identifier} - Payload Incorrect {err.normalized_messages()}')
+        return jsonify({'error': err.normalized_messages()}), 400
+
+    try:
+        return ProcessWPARequest(validated_data_object, req_identifier)
+
+    except Exception as err:
+        return jsonify({'error': 'An unexpected error occurred'}), 500
     pass
 
 @app.route('/', methods=['GET','POST'])
